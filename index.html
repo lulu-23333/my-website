@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>探索中医世界</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* 欢迎页专属样式 */
+        .welcome-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 插画容器 */
+        .illustration-container {
+            width: 400px;
+            height: 400px;
+            position: relative;
+            margin-bottom: 3rem;
+        }
+
+        /* 药罐SVG样式 */
+        .medicine-pot {
+            width: 100%;
+            height: 100%;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* 蒸汽动画 */
+        .steam {
+            animation: steam 2s ease-in-out infinite;
+        }
+
+        @keyframes steam {
+            0%, 100% { opacity: 0.3; transform: translateY(0) scale(1); }
+            50% { opacity: 0.8; transform: translateY(-20px) scale(1.1); }
+        }
+
+        .steam:nth-child(2) { animation-delay: 0.3s; }
+        .steam:nth-child(3) { animation-delay: 0.6s; }
+
+        /* 欢迎文字 */
+        .welcome-text {
+            text-align: center;
+            margin-bottom: 3rem;
+            z-index: 10;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: var(--current-text);
+        }
+
+        .welcome-subtitle {
+            font-size: 1.3rem;
+            color: var(--current-text);
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-description {
+            font-size: 1.1rem;
+            color: var(--current-text);
+            opacity: 0.7;
+        }
+
+        /* 开始探索按钮 */
+        .explore-btn {
+            padding: 1rem 3rem;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, var(--current-primary), var(--current-secondary));
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            z-index: 10;
+        }
+
+        .explore-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 背景装饰 */
+        .bg-decoration {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--current-primary);
+            opacity: 0.1;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .illustration-container {
+                width: 300px;
+                height: 300px;
+            }
+
+            .welcome-title {
+                font-size: 1.8rem;
+            }
+
+            .welcome-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .welcome-description {
+                font-size: 1rem;
+            }
+
+            .explore-btn {
+                padding: 0.8rem 2rem;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-page">
+        <!-- 背景装饰 -->
+        <div class="bg-decoration">
+            <div class="bg-circle" style="width: 300px; height: 300px; top: -100px; right: -100px;"></div>
+            <div class="bg-circle" style="width: 200px; height: 200px; bottom: -50px; left: -50px;"></div>
+            <div class="bg-circle" style="width: 150px; height: 150px; top: 50%; left: 10%; opacity: 0.05;"></div>
+        </div>
+
+        <!-- 插画区域 -->
+        <div class="illustration-container">
+            <svg class="medicine-pot" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                <!-- 桌子 -->
+                <rect x="50" y="280" width="300" height="20" rx="5" fill="#8B7355"/>
+                <rect x="60" y="300" width="20" height="80" fill="#8B7355"/>
+                <rect x="320" y="300" width="20" height="80" fill="#8B7355"/>
+
+                <!-- 炉子 -->
+                <ellipse cx="200" cy="270" rx="80" ry="20" fill="#6B4423"/>
+                <rect x="120" y="220" width="160" height="50" rx="10" fill="#8B5A2B"/>
+                <ellipse cx="200" cy="220" rx="80" ry="15" fill="#A0522D"/>
+
+                <!-- 炉子脚 -->
+                <rect x="130" y="265" width="15" height="20" fill="#6B4423"/>
+                <rect x="255" y="265" width="15" height="20" fill="#6B4423"/>
+
+                <!-- 火焰纹理 -->
+                <path d="M 180 240 Q 185 230 190 240 Q 195 230 200 240 Q 205 230 210 240 Q 215 230 220 240" stroke="#FF6B35" stroke-width="3" fill="none"/>
+
+                <!-- 药罐 -->
+                <ellipse cx="200" cy="180" rx="70" ry="20" fill="#C65D3B"/>
+                <path d="M 130 180 L 140 130 Q 140 110 200 110 Q 260 110 260 130 L 270 180" fill="#C65D3B"/>
+                <ellipse cx="200" cy="130" rx="60" ry="15" fill="#A0462A"/>
+
+                <!-- 药罐把手 -->
+                <path d="M 130 140 Q 100 140 100 160 Q 100 170 115 170" stroke="#8B4513" stroke-width="8" fill="none"/>
+                <path d="M 270 140 Q 300 140 300 160 Q 300 170 285 170" stroke="#8B4513" stroke-width="8" fill="none"/>
+
+                <!-- 药罐装饰纹理 -->
+                <path d="M 150 155 Q 200 160 250 155" stroke="#8B4513" stroke-width="2" fill="none"/>
+                <path d="M 155 170 Q 200 175 245 170" stroke="#8B4513" stroke-width="2" fill="none"/>
+
+                <!-- 蒸汽 -->
+                <g class="steam">
+                    <path d="M 180 90 Q 175 70 185 50 Q 195 30 185 10" stroke="white" stroke-width="4" fill="none" opacity="0.6" stroke-linecap="round"/>
+                </g>
+                <g class="steam">
+                    <path d="M 200 85 Q 205 65 195 45 Q 185 25 195 5" stroke="white" stroke-width="4" fill="none" opacity="0.6" stroke-linecap="round"/>
+                </g>
+                <g class="steam">
+                    <path d="M 220 90 Q 215 70 225 50 Q 235 30 225 10" stroke="white" stroke-width="4" fill="none" opacity="0.6" stroke-linecap="round"/>
+                </g>
+
+                <!-- 秤砣（左侧） -->
+                <rect x="70" y="250" width="35" height="25" rx="5" fill="#6B4423"/>
+                <circle cx="87" cy="262" r="8" fill="#8B5A2B"/>
+                <line x1="87" y1="254" x2="87" y2="250" stroke="#5D3A1A" stroke-width="2"/>
+                <text x="87" y="266" font-size="10" fill="#F5DEB3" text-anchor="middle">秤</text>
+
+                <!-- 黄芪（左侧） -->
+                <ellipse cx="70" cy="290" rx="12" ry="6" fill="#DAA520"/>
+                <ellipse cx="55" cy="295" rx="10" ry="5" fill="#B8860B"/>
+
+                <!-- 人参（右侧） -->
+                <ellipse cx="330" cy="285" rx="8" ry="12" fill="#F4A460"/>
+                <circle cx="330" cy="278" r="2" fill="#5D3A1A"/>
+
+                <!-- 当归（右下） -->
+                <ellipse cx="310" cy="310" rx="15" ry="8" fill="#D2691E"/>
+                <ellipse cx="295" cy="315" rx="10" ry="5" fill="#A0522D"/>
+
+                <!-- 白术（左下） -->
+                <ellipse cx="100" cy="320" rx="12" ry="7" fill="#DEB887"/>
+                <ellipse cx="115" cy="325" rx="8" ry="5" fill="#D2B48C"/>
+
+                <!-- 竹筛（右侧） -->
+                <ellipse cx="340" cy="255" rx="25" ry="8" fill="#D2691E"/>
+                <ellipse cx="340" cy="253" rx="20" ry="6" fill="#F4A460"/>
+
+                <!-- 药方纸（前面） -->
+                <rect x="160" y="285" width="40" height="30" rx="2" fill="#F5DEB3" transform="rotate(-5 180 300)"/>
+                <line x1="165" y1="292" x2="190" y2="290" stroke="#8B4513" stroke-width="1"/>
+                <line x1="164" y1="298" x2="192" y2="296" stroke="#8B4513" stroke-width="1"/>
+            </svg>
+        </div>
+
+        <!-- 欢迎文字 -->
+        <div class="welcome-text">
+            <h1 class="welcome-title">我们正在一起探索中医世界</h1>
+            <p class="welcome-subtitle">五行 · 药材 · 养生 · 记录</p>
+            <p class="welcome-description">根据节气变化，体验传统中医的智慧</p>
+        </div>
+
+        <!-- 开始探索按钮 -->
+        <a href="home.html" class="explore-btn">开始探索</a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

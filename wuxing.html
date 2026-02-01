@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>五行学说 - 中医养生</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ===== 五行页面专属样式 ===== */
+        .wuxing-page {
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--current-bg) 0%, var(--current-secondary) 100%);
+        }
+
+        /* 水墨祥云背景装饰 */
+        .ink-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .ink-cloud {
+            position: absolute;
+            background: radial-gradient(ellipse at center, var(--current-text) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(40px);
+        }
+
+        .ink-cloud-1 {
+            width: 400px;
+            height: 200px;
+            top: 10%;
+            left: 5%;
+            animation: cloudFloat 20s ease-in-out infinite;
+        }
+
+        .ink-cloud-2 {
+            width: 300px;
+            height: 150px;
+            top: 60%;
+            right: 10%;
+            animation: cloudFloat 25s ease-in-out infinite reverse;
+        }
+
+        .ink-cloud-3 {
+            width: 250px;
+            height: 120px;
+            bottom: 20%;
+            left: 20%;
+            animation: cloudFloat 30s ease-in-out infinite;
+        }
+
+        @keyframes cloudFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(30px, -20px) scale(1.1); }
+        }
+
+        /* 祥云SVG装饰 */
+        .cloud-svg {
+            position: absolute;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .cloud-svg-1 {
+            top: 15%;
+            right: 15%;
+            width: 150px;
+            animation: cloudFloat2 15s ease-in-out infinite;
+        }
+
+        .cloud-svg-2 {
+            bottom: 25%;
+            left: 10%;
+            width: 120px;
+            animation: cloudFloat2 20s ease-in-out infinite reverse;
+        }
+
+        @keyframes cloudFloat2 {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* 主容器 */
+        .wuxing-container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 80px);
+            padding: 2rem;
+        }
+
+        /* 点击提示按钮 */
+        .click-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--current-primary);
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 200;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            animation: hintPulse 2s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+
+        .click-hint:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+            filter: brightness(1.1);
+        }
+
+        .click-hint-icon {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .click-hint-text {
+            font-size: 0.65rem;
+            color: white;
+            margin-top: 0.2rem;
+            font-weight: bold;
+        }
+
+        .click-hint.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: translate(-50%, -50%) scale(0.5);
+        }
+
+        @keyframes hintPulse {
+            0%, 100% {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 0 0 0 var(--current-primary);
+            }
+            50% {
+                box-shadow: 0 6px 30px rgba(0, 0, 0, 0.2), 0 0 0 15px transparent;
+            }
+        }
+
+        /* 五行圆形容器 */
+        .wuxing-circle {
+            position: relative;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            animation: slowRotate 60s linear infinite;
+            z-index: 50;
+        }
+
+        .wuxing-circle.paused {
+            animation-play-state: paused;
+        }
+
+        @keyframes slowRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 反向旋转，保持元素正位 */
+        @keyframes counterRotate {
+            from { transform: rotate(360deg); }
+            to { transform: rotate(0deg); }
+        }
+
+        /* 五行元素 */
+        .wuxing-element {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            z-index: 100;
+        }
+
+        /* 五行位置（圆形布局 - 均匀分布） */
+        .element-wood {
+            top: 16.7%;
+            left: 50%;
+            margin-left: -50px;
+            margin-top: -50px;
+            background: radial-gradient(circle, rgba(102, 200, 154, 1), rgba(102, 200, 154, 0.7));
+            box-shadow: 0 0 30px rgba(102, 200, 154, 0.8);
+            border: 3px solid rgba(102, 200, 154, 1);
+        }
+
+        .element-fire {
+            top: 39.7%;
+            left: 81.7%;
+            margin-left: -50px;
+            margin-top: -50px;
+            background: radial-gradient(circle, rgba(255, 140, 105, 1), rgba(255, 140, 105, 0.7));
+            box-shadow: 0 0 30px rgba(255, 140, 105, 0.8);
+            border: 3px solid rgba(255, 140, 105, 1);
+        }
+
+        .element-earth {
+            top: 77%;
+            left: 69.6%;
+            margin-left: -50px;
+            margin-top: -50px;
+            background: radial-gradient(circle, rgba(232, 197, 71, 1), rgba(232, 197, 71, 0.7));
+            box-shadow: 0 0 30px rgba(232, 197, 71, 0.8);
+            border: 3px solid rgba(232, 197, 71, 1);
+        }
+
+        .element-metal {
+            top: 77%;
+            left: 30.4%;
+            margin-left: -50px;
+            margin-top: -50px;
+            background: radial-gradient(circle, rgba(232, 220, 200, 1), rgba(232, 220, 200, 0.7));
+            box-shadow: 0 0 30px rgba(232, 220, 200, 0.8);
+            border: 3px solid rgba(232, 220, 200, 1);
+        }
+
+        .element-water {
+            top: 39.7%;
+            left: 18.3%;
+            margin-left: -50px;
+            margin-top: -50px;
+            background: radial-gradient(circle, rgba(74, 111, 165, 1), rgba(74, 111, 165, 0.7));
+            box-shadow: 0 0 30px rgba(74, 111, 165, 0.8);
+            border: 3px solid rgba(74, 111, 165, 1);
+        }
+
+        /* 元素内容保持正位（反向旋转） */
+        .element-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: counterRotate 60s linear infinite;
+        }
+
+        .wuxing-circle.paused .element-content-wrapper {
+            animation-play-state: paused;
+        }
+
+        /* 移除太极相关样式 */
+
+        /* 呼吸动画 */
+        .wuxing-element::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border-radius: 50%;
+            background: inherit;
+            opacity: 0.3;
+            filter: blur(10px);
+            animation: breathe 3s ease-in-out infinite;
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.5; }
+        }
+
+        /* 悬停效果 */
+        .wuxing-element:hover {
+            transform: scale(1.3) !important;
+            z-index: 20;
+        }
+
+        .wuxing-element:hover .element-icon {
+            font-size: 3rem;
+        }
+
+        .wuxing-element:hover .element-name {
+            font-size: 1.2rem;
+        }
+
+        /* 元素内容 */
+        .element-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.3rem;
+            transition: all 0.3s ease;
+        }
+
+        .element-name {
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        /* 连线 */
+        .connection-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .connection-line {
+            position: absolute;
+            transform-origin: center;
+        }
+
+        .sheng-line {
+            stroke: var(--current-primary);
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 10, 5;
+            animation: flowLine 3s linear infinite;
+        }
+
+        .ke-line {
+            stroke: rgba(150, 150, 150, 0.5);
+            stroke-width: 1;
+            fill: none;
+            stroke-dasharray: 5, 5;
+        }
+
+        @keyframes flowLine {
+            to { stroke-dashoffset: -30; }
+        }
+
+        /* 信息点容器 */
+        .info-dots {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            height: 700px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .info-dots.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .info-dot {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            animation: dotFadeIn 0.5s ease backwards;
+        }
+
+        .info-dot:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes dotFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* 知识卡片容器（背景层） */
+        .knowledge-fullpage-container {
+            pointer-events: auto;
+        }
+
+        .knowledge-fullpage-container:hover {
+            pointer-events: auto;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .wuxing-circle {
+                width: 350px;
+                height: 350px;
+            }
+
+            .wuxing-element {
+                width: 70px;
+                height: 70px;
+            }
+
+            .element-icon {
+                font-size: 1.8rem;
+            }
+
+            .element-name {
+                font-size: 0.8rem;
+            }
+
+            .info-dots {
+                width: 100%;
+                height: 100%;
+            }
+
+            .knowledge-fullpage-container {
+                grid-template-columns: 1fr !important;
+                padding: 1rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="site-title">个人中医养生</h1>
+            <button class="menu-toggle" id="menuToggle">☰ 菜单</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="home.html">首页</a></li>
+                <li><a href="yaocai.html">伤寒论药材</a></li>
+                <li><a href="personal.html">个人中心</a></li>
+                <li class="season-selector">
+                    <button class="season-selector-btn" id="seasonSelectorBtn">
+                        <span id="currentSeasonLabel">🌸 春季</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <ul class="season-dropdown" id="seasonDropdown">
+                        <li><button class="season-dropdown-item" data-season="spring">🌸 春季</button></li>
+                        <li><button class="season-dropdown-item" data-season="summer">☀️ 夏季</button></li>
+                        <li><button class="season-dropdown-item" data-season="longsummer">🌾 长夏</button></li>
+                        <li><button class="season-dropdown-item" data-season="autumn">🍂 秋季</button></li>
+                        <li><button class="season-dropdown-item" data-season="winter">❄️ 冬季</button></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 五行页面主体 -->
+    <div class="wuxing-page">
+        <!-- 水墨祥云背景 -->
+        <div class="ink-bg">
+            <div class="ink-cloud ink-cloud-1"></div>
+            <div class="ink-cloud ink-cloud-2"></div>
+            <div class="ink-cloud ink-cloud-3"></div>
+        </div>
+
+        <!-- 祥云SVG装饰 -->
+        <svg class="cloud-svg cloud-svg-1" viewBox="0 0 100 60">
+            <path d="M10,40 Q5,35 10,30 Q15,20 25,25 Q30,15 40,20 Q50,10 60,20 Q70,15 75,25 Q85,20 90,30 Q95,35 90,40 Q85,50 75,45 Q65,55 55,45 Q45,55 35,45 Q25,50 15,45 Q5,50 10,40" fill="currentColor"/>
+        </svg>
+        <svg class="cloud-svg cloud-svg-2" viewBox="0 0 100 60">
+            <path d="M10,40 Q5,35 10,30 Q15,20 25,25 Q30,15 40,20 Q50,10 60,20 Q70,15 75,25 Q85,20 90,30 Q95,35 90,40 Q85,50 75,45 Q65,55 55,45 Q45,55 35,45 Q25,50 15,45 Q5,50 10,40" fill="currentColor"/>
+        </svg>
+
+        <!-- 五行容器 -->
+        <div class="wuxing-container">
+            <!-- 点击提示按钮 -->
+            <div class="click-hint" id="clickHint">
+                <div class="click-hint-icon">👆</div>
+                <div class="click-hint-text">点击元素</div>
+            </div>
+
+            <div class="wuxing-circle" id="wuxingCircle">
+                <!-- 连线SVG -->
+                <svg class="connection-lines" viewBox="0 0 600 600">
+                    <!-- 相生线（圆形连接） -->
+                    <circle cx="300" cy="300" r="200" class="sheng-line"/>
+
+                    <!-- 相克线（五角星形） -->
+                    <!-- 木克土：木(300,100) → 土(417.6,461.8) -->
+                    <line x1="300" y1="100" x2="417.6" y2="461.8" class="ke-line"/>
+
+                    <!-- 土克水：土(417.6,461.8) → 水(109.8,238.2) -->
+                    <line x1="417.6" y1="461.8" x2="109.8" y2="238.2" class="ke-line"/>
+
+                    <!-- 水克火：水(109.8,238.2) → 火(490.2,238.2) -->
+                    <line x1="109.8" y1="238.2" x2="490.2" y2="238.2" class="ke-line"/>
+
+                    <!-- 火克金：火(490.2,238.2) → 金(182.4,461.8) -->
+                    <line x1="490.2" y1="238.2" x2="182.4" y2="461.8" class="ke-line"/>
+
+                    <!-- 金克木：金(182.4,461.8) → 木(300,100) -->
+                    <line x1="182.4" y1="461.8" x2="300" y2="100" class="ke-line"/>
+
+                    <!-- 相克箭头标记 -->
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="rgba(150, 150, 150, 0.5)"/>
+                        </marker>
+                    </defs>
+                </svg>
+
+                <!-- 五行元素 -->
+                <div class="wuxing-element element-wood" data-element="wood">
+                    <div class="element-content-wrapper">
+                        <div class="element-icon">🌿</div>
+                        <div class="element-name">木</div>
+                    </div>
+                </div>
+
+                <div class="wuxing-element element-fire" data-element="fire">
+                    <div class="element-content-wrapper">
+                        <div class="element-icon">☀️</div>
+                        <div class="element-name">火</div>
+                    </div>
+                </div>
+
+                <div class="wuxing-element element-earth" data-element="earth">
+                    <div class="element-content-wrapper">
+                        <div class="element-icon">✨</div>
+                        <div class="element-name">土</div>
+                    </div>
+                </div>
+
+                <div class="wuxing-element element-metal" data-element="metal">
+                    <div class="element-content-wrapper">
+                        <div class="element-icon">🌬️</div>
+                        <div class="element-name">金</div>
+                    </div>
+                </div>
+
+                <div class="wuxing-element element-water" data-element="water">
+                    <div class="element-content-wrapper">
+                        <div class="element-icon">💧</div>
+                        <div class="element-name">水</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 信息点容器 -->
+            <div class="info-dots" id="infoDots"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="wuxing.js"></script>
+</body>
+</html>

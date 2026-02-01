@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>伤寒论药材库 - 中医养生</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ===== 药材页面专属样式 ===== */
+        .yaocai-page {
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--current-bg) 0%, var(--current-secondary) 100%);
+            padding: 2rem;
+        }
+
+        /* 水墨装饰背景 */
+        .ink-decoration {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .ink-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--current-text) 0%, transparent 70%);
+            filter: blur(50px);
+        }
+
+        .ink-circle-1 {
+            width: 400px;
+            height: 400px;
+            top: -100px;
+            right: -100px;
+        }
+
+        .ink-circle-2 {
+            width: 300px;
+            height: 300px;
+            bottom: 10%;
+            left: -50px;
+        }
+
+        .ink-circle-3 {
+            width: 200px;
+            height: 200px;
+            top: 40%;
+            right: 10%;
+        }
+
+        /* 主容器 */
+        .yaocai-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* 页面标题 */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--current-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--current-text);
+            opacity: 0.8;
+        }
+
+        /* 搜索和筛选区 */
+        .filter-section {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.5rem;
+            border: 2px solid var(--current-primary);
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .search-input:focus {
+            box-shadow: 0 0 0 3px rgba(102, 200, 154, 0.2);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.2rem;
+            border: 2px solid var(--current-primary);
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            color: var(--current-text);
+        }
+
+        .filter-btn:hover {
+            background: var(--current-primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: var(--current-primary);
+            color: white;
+        }
+
+        /* 药材卡片网格 */
+        .herbs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .herb-card {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border-top: 4px solid var(--current-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .herb-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--current-primary) 0%, var(--current-secondary) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 0;
+        }
+
+        .herb-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .herb-card:hover::before {
+            opacity: 0.05;
+        }
+
+        .herb-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .herb-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--current-text);
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .herb-pinyin {
+            font-size: 0.9rem;
+            color: var(--current-text);
+            opacity: 0.7;
+            margin-bottom: 0.8rem;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        .herb-category {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: var(--current-primary);
+            color: white;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .herb-description {
+            font-size: 0.9rem;
+            color: var(--current-text);
+            opacity: 0.8;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 药材详情弹窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--current-text);
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            opacity: 1;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--current-primary);
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--current-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-pinyin {
+            font-size: 1.1rem;
+            color: var(--current-text);
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        .modal-body {
+            line-height: 1.8;
+        }
+
+        .info-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: var(--current-primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .info-text {
+            color: var(--current-text);
+            opacity: 0.9;
+        }
+
+        .tag-container {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .tag {
+            padding: 0.4rem 0.8rem;
+            background: rgba(102, 200, 154, 0.2);
+            border-radius: 15px;
+            font-size: 0.85rem;
+            color: var(--current-text);
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .herbs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+            }
+        }
+
+        /* 空状态 */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--current-text);
+            opacity: 0.7;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="site-title">个人中医养生</h1>
+            <button class="menu-toggle" id="menuToggle">☰ 菜单</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="home.html">首页</a></li>
+                <li><a href="wuxing.html">五行学说</a></li>
+                <li><a href="yaocai.html" style="opacity: 0.8;">伤寒论药材</a></li>
+                <li><a href="personal.html">个人中心</a></li>
+                <li class="season-selector">
+                    <button class="season-selector-btn" id="seasonSelectorBtn">
+                        <span id="currentSeasonLabel">🌸 春季</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <ul class="season-dropdown" id="seasonDropdown">
+                        <li><button class="season-dropdown-item" data-season="spring">🌸 春季</button></li>
+                        <li><button class="season-dropdown-item" data-season="summer">☀️ 夏季</button></li>
+                        <li><button class="season-dropdown-item" data-season="longsummer">🌾 长夏</button></li>
+                        <li><button class="season-dropdown-item" data-season="autumn">🍂 秋季</button></li>
+                        <li><button class="season-dropdown-item" data-season="winter">❄️ 冬季</button></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 药材页面主体 -->
+    <div class="yaocai-page">
+        <!-- 水墨装饰背景 -->
+        <div class="ink-decoration">
+            <div class="ink-circle ink-circle-1"></div>
+            <div class="ink-circle ink-circle-2"></div>
+            <div class="ink-circle ink-circle-3"></div>
+        </div>
+
+        <!-- 主容器 -->
+        <div class="yaocai-container">
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1 class="page-title">📚 伤寒论药材库</h1>
+                <p class="page-subtitle">收录《伤寒论》常用药材，传承中医智慧</p>
+            </div>
+
+            <!-- 搜索和筛选 -->
+            <div class="filter-section">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" id="searchInput" placeholder="搜索药材名称、功效...">
+                </div>
+                <div class="filter-group">
+                    <button class="filter-btn active" data-category="all">全部</button>
+                    <button class="filter-btn" data-category="解表">解表药</button>
+                    <button class="filter-btn" data-category="清热">清热药</button>
+                    <button class="filter-btn" data-category="泻下">泻下药</button>
+                    <button class="filter-btn" data-category="祛湿">祛湿药</button>
+                    <button class="filter-btn" data-category="温里">温里药</button>
+                    <button class="filter-btn" data-category="补气">补气药</button>
+                    <button class="filter-btn" data-category="补血">补血药</button>
+                </div>
+            </div>
+
+            <!-- 药材卡片网格 -->
+            <div class="herbs-grid" id="herbsGrid">
+                <!-- 药材卡片会通过JS动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 药材详情弹窗 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">✕</button>
+            <div class="modal-header">
+                <div class="modal-icon" id="modalIcon">🌿</div>
+                <h2 class="modal-title" id="modalTitle">药材名称</h2>
+                <p class="modal-pinyin" id="modalPinyin">Pinyin</p>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 详情内容会通过JS动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="yaocai.js"></script>
+</body>
+</html>

@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心 - 中医养生</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ===== 个人中心页面专属样式 ===== */
+        .personal-page {
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--current-bg) 0%, var(--current-secondary) 100%);
+            padding: 2rem;
+        }
+
+        /* 水墨装饰背景 */
+        .ink-decoration {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .ink-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--current-text) 0%, transparent 70%);
+            filter: blur(50px);
+        }
+
+        .ink-circle-1 {
+            width: 350px;
+            height: 350px;
+            top: 10%;
+            left: -100px;
+        }
+
+        .ink-circle-2 {
+            width: 250px;
+            height: 250px;
+            top: 60%;
+            right: -50px;
+        }
+
+        .ink-circle-3 {
+            width: 200px;
+            height: 200px;
+            bottom: 10%;
+            left: 30%;
+        }
+
+        /* 主容器 */
+        .personal-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 页面标题 */
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--current-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--current-text);
+            opacity: 0.8;
+        }
+
+        /* 标签页导航 */
+        .tabs-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 0.5rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            background: transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--current-text);
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .tab-btn:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        .tab-btn.active {
+            opacity: 1;
+            background: var(--current-primary);
+            color: white;
+            font-weight: bold;
+        }
+
+        /* 标签内容区 */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* 体质测试卡片 */
+        .constitution-card {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(5px);
+        }
+
+        .constitution-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--current-text);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .constitution-description {
+            font-size: 1rem;
+            color: var(--current-text);
+            opacity: 0.8;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .test-btn {
+            background: linear-gradient(135deg, var(--current-primary), var(--current-secondary));
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 体质结果展示 */
+        .constitution-result {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 1.5rem;
+            border-left: 5px solid var(--current-primary);
+            display: none;
+        }
+
+        .constitution-result.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-name {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--current-primary);
+            margin-bottom: 1rem;
+        }
+
+        .result-features {
+            font-size: 1rem;
+            color: var(--current-text);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .result-advice {
+            background: rgba(102, 200, 154, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .advice-title {
+            font-weight: bold;
+            color: var(--current-primary);
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .advice-text {
+            color: var(--current-text);
+            line-height: 1.6;
+        }
+
+        /* 健康记录 */
+        .health-records {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .record-card {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid var(--current-primary);
+        }
+
+        .record-date {
+            font-size: 0.9rem;
+            color: var(--current-text);
+            opacity: 0.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .record-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--current-text);
+            margin-bottom: 0.8rem;
+        }
+
+        .record-content {
+            font-size: 1rem;
+            color: var(--current-text);
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .add-record-btn {
+            background: rgba(255, 255, 255, 0.7);
+            border: 2px dashed var(--current-primary);
+            border-radius: 16px;
+            padding: 2rem;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            color: var(--current-primary);
+        }
+
+        .add-record-btn:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+
+        /* 节气养生建议 */
+        .seasonal-advice {
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .seasonal-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .seasonal-icon {
+            font-size: 3rem;
+        }
+
+        .seasonal-info h3 {
+            font-size: 1.5rem;
+            color: var(--current-text);
+            margin-bottom: 0.3rem;
+        }
+
+        .seasonal-info p {
+            font-size: 1rem;
+            color: var(--current-text);
+            opacity: 0.7;
+        }
+
+        .advice-section {
+            margin-top: 1.5rem;
+        }
+
+        .advice-section-title {
+            font-weight: bold;
+            color: var(--current-primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .advice-section-content {
+            color: var(--current-text);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .food-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .food-tag {
+            padding: 0.5rem 1rem;
+            background: rgba(102, 200, 154, 0.2);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--current-text);
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 1.8rem;
+            }
+
+            .tabs-nav {
+                flex-direction: column;
+            }
+
+            .tab-btn {
+                width: 100%;
+            }
+
+            .constitution-card {
+                padding: 1.5rem;
+            }
+        }
+
+        /* 体质测试弹窗 */
+        .test-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .test-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .test-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .test-question {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .test-question:last-child {
+            border-bottom: none;
+        }
+
+        .question-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--current-text);
+            margin-bottom: 1rem;
+        }
+
+        .question-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .option-label:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .option-label input[type="radio"] {
+            cursor: pointer;
+        }
+
+        .test-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .test-submit {
+            flex: 1;
+            background: var(--current-primary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .test-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .test-cancel {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--current-text);
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .test-cancel:hover {
+            background: rgba(0, 0, 0, 0.15);
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="site-title">个人中医养生</h1>
+            <button class="menu-toggle" id="menuToggle">☰ 菜单</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="home.html">首页</a></li>
+                <li><a href="wuxing.html">五行学说</a></li>
+                <li><a href="yaocai.html">伤寒论药材</a></li>
+                <li><a href="personal.html" style="opacity: 0.8;">个人中心</a></li>
+                <li class="season-selector">
+                    <button class="season-selector-btn" id="seasonSelectorBtn">
+                        <span id="currentSeasonLabel">🌸 春季</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <ul class="season-dropdown" id="seasonDropdown">
+                        <li><button class="season-dropdown-item" data-season="spring">🌸 春季</button></li>
+                        <li><button class="season-dropdown-item" data-season="summer">☀️ 夏季</button></li>
+                        <li><button class="season-dropdown-item" data-season="longsummer">🌾 长夏</button></li>
+                        <li><button class="season-dropdown-item" data-season="autumn">🍂 秋季</button></li>
+                        <li><button class="season-dropdown-item" data-season="winter">❄️ 冬季</button></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 个人中心页面主体 -->
+    <div class="personal-page">
+        <!-- 水墨装饰背景 -->
+        <div class="ink-decoration">
+            <div class="ink-circle ink-circle-1"></div>
+            <div class="ink-circle ink-circle-2"></div>
+            <div class="ink-circle ink-circle-3"></div>
+        </div>
+
+        <!-- 主容器 -->
+        <div class="personal-container">
+            <!-- 页面标题 -->
+            <div class="page-header">
+                <h1 class="page-title">👤 个人中心</h1>
+                <p class="page-subtitle">体质辨识 · 健康记录 · 节气养生</p>
+            </div>
+
+            <!-- 标签页导航 -->
+            <div class="tabs-nav">
+                <button class="tab-btn active" data-tab="constitution">体质辨识</button>
+                <button class="tab-btn" data-tab="records">健康记录</button>
+                <button class="tab-btn" data-tab="seasonal">节气养生</button>
+            </div>
+
+            <!-- 体质辨识标签页 -->
+            <div class="tab-content active" id="constitution">
+                <div class="constitution-card">
+                    <div class="constitution-title">
+                        <span>🩺</span>
+                        <span>中医体质辨识</span>
+                    </div>
+                    <div class="constitution-description">
+                        通过简单的问卷测试，了解您的中医体质类型，获得针对性的养生建议。
+                        中医体质分为平和质、气虚质、阳虚质、阴虚质、痰湿质、湿热质、血瘀质、气郁质、特禀质九种类型。
+                    </div>
+                    <button class="test-btn" id="startTest">开始体质测试</button>
+
+                    <!-- 测试结果 -->
+                    <div class="constitution-result" id="constitutionResult">
+                        <div class="result-name" id="resultName"></div>
+                        <div class="result-features" id="resultFeatures"></div>
+                        <div class="result-advice">
+                            <div class="advice-title">💡 养生建议</div>
+                            <div class="advice-text" id="resultAdvice"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 健康记录标签页 -->
+            <div class="tab-content" id="records">
+                <div class="health-records" id="healthRecords">
+                    <!-- 记录卡片会通过JS动态生成 -->
+                </div>
+                <button class="add-record-btn" id="addRecord">
+                    <span>➕</span>
+                    <span>添加健康记录</span>
+                </button>
+            </div>
+
+            <!-- 节气养生标签页 -->
+            <div class="tab-content" id="seasonal">
+                <div class="seasonal-advice" id="seasonalAdvice">
+                    <!-- 内容会通过JS动态生成 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 体质测试弹窗 -->
+    <div class="test-overlay" id="testOverlay">
+        <div class="test-content">
+            <h2 style="margin-bottom: 1.5rem; color: var(--current-text);">中医体质辨识问卷</h2>
+            <form id="constitutionForm">
+                <!-- 问题会通过JS动态生成 -->
+            </form>
+            <div class="test-actions">
+                <button class="test-cancel" id="testCancel">取消</button>
+                <button class="test-submit" id="testSubmit">提交测试</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="personal.js"></script>
+</body>
+</html>

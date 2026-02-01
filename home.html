@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中医养生网站</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <h1 class="site-title">个人中医养生</h1>
+            <button class="menu-toggle" id="menuToggle">☰ 菜单</button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="wuxing.html" style="opacity: 0.8;">五行学说</a></li>
+                <li><a href="yaocai.html">伤寒论药材</a></li>
+                <li><a href="personal.html">个人中心</a></li>
+                <li class="season-selector">
+                    <button class="season-selector-btn" id="seasonSelectorBtn">
+                        <span id="currentSeasonLabel">🌸 春季</span>
+                        <span class="arrow">▼</span>
+                    </button>
+                    <ul class="season-dropdown" id="seasonDropdown">
+                        <li><button class="season-dropdown-item" data-season="spring">🌸 春季</button></li>
+                        <li><button class="season-dropdown-item" data-season="summer">☀️ 夏季</button></li>
+                        <li><button class="season-dropdown-item" data-season="longsummer">🌾 长夏</button></li>
+                        <li><button class="season-dropdown-item" data-season="autumn">🍂 秋季</button></li>
+                        <li><button class="season-dropdown-item" data-season="winter">❄️ 冬季</button></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <!-- 季节养生主视觉区 -->
+        <section class="hero-section" id="heroSection">
+            <div class="hero-content">
+                <div class="season-icon" id="seasonIcon">🌸</div>
+                <h2 class="season-title" id="seasonTitle">春生</h2>
+                <p class="season-subtitle" id="seasonSubtitle">当前节气：立春</p>
+                <p class="season-description" id="seasonDescription">
+                    主肝 - 生发之机<br>
+                    晚睡早起，宽衣松发，闲庭散步，保养生发
+                </p>
+                <div class="hero-buttons">
+                    <a href="wuxing.html" class="btn btn-primary">探索五行</a>
+                    <a href="yaocai.html" class="btn btn-secondary">查看药材</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 功能卡片区 -->
+        <section class="cards-section">
+            <div class="card" id="wuxing">
+                <div class="card-icon">🌿</div>
+                <h3 class="card-title">五行学说</h3>
+                <p class="card-description">探索金木水火土的奥秘，了解五行相生相克的循环关系</p>
+                <a href="wuxing.html" class="card-link">了解更多 →</a>
+            </div>
+
+            <div class="card" id="yaocai">
+                <div class="card-icon">📖</div>
+                <h3 class="card-title">伤寒论药材库</h3>
+                <p class="card-description">经典经方与药材详解，按六经辨证分类学习</p>
+                <a href="yaocai.html" class="card-link">浏览药材 →</a>
+            </div>
+
+            <div class="card" id="personal">
+                <div class="card-icon">👤</div>
+                <h3 class="card-title">个人中心</h3>
+                <p class="card-description">我的成长经历、健康打卡记录和收藏内容</p>
+                <a href="personal.html" class="card-link">进入中心 →</a>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
