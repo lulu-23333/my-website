@@ -357,4 +357,194 @@ body {
     .cards-section {
         grid-template-columns: 1fr;
     }
+
+    .main-content {
+        padding: 1.5rem;
+    }
+
+    .hero-section {
+        padding: 3rem 1.5rem;
+    }
+
+    .season-icon {
+        font-size: 3rem;
+    }
+
+    .card {
+        padding: 1.5rem;
+    }
+}
+
+/* 小屏幕手机优化（480px及以下） */
+@media (max-width: 480px) {
+    .nav-container {
+        padding: 0 1rem;
+    }
+
+    .site-title {
+        font-size: 1rem;
+    }
+
+    .menu-toggle {
+        padding: 0.4rem 0.8rem;
+        font-size: 1rem;
+    }
+
+    .nav-menu {
+        padding: 0.8rem;
+    }
+
+    .nav-menu a {
+        font-size: 1rem;
+        padding: 0.5rem 0;
+    }
+
+    .season-selector-btn {
+        font-size: 1rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .main-content {
+        padding: 1rem;
+    }
+
+    .hero-section {
+        padding: 2.5rem 1rem 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .season-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .season-title {
+        font-size: 1.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .season-subtitle {
+        font-size: 1.1rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .season-description {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.7;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .cards-section {
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .card {
+        padding: 1.2rem;
+        border-radius: 12px;
+    }
+
+    .card-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .card-title {
+        font-size: 1.3rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .card-description {
+        font-size: 0.95rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .season-dropdown {
+        min-width: 100%;
+    }
+
+    .season-dropdown-item {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.95rem;
+    }
+}
+
+/* 超小屏幕优化（360px及以下） */
+@media (max-width: 360px) {
+    .site-title {
+        font-size: 0.95rem;
+    }
+
+    .season-title {
+        font-size: 1.5rem;
+    }
+
+    .season-subtitle {
+        font-size: 1rem;
+    }
+
+    .season-description {
+        font-size: 0.95rem;
+    }
+
+    .btn {
+        font-size: 0.95rem;
+        padding: 0.7rem 1.2rem;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+    }
+
+    .card-icon {
+        font-size: 2rem;
+    }
+}
+
+/* 横屏模式优化 */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero-section {
+        padding: 2rem 1.5rem;
+    }
+
+    .season-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .season-title {
+        font-size: 2rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .season-subtitle {
+        font-size: 1rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .season-description {
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+    }
+
+    .hero-buttons {
+        gap: 0.8rem;
+    }
+
+    .btn {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.95rem;
+    }
 }
